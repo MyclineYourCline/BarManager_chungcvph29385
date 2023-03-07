@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nhập tên đồ uống"/>
+    <EditText
+        android:id="@+id/diaLog_add_drinkName"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_txt"
+        android:hint="Tên đồ uống..."/>
+    <Spinner
+        android:id="@+id/dialog_add_spinerDinks"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        />
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/drinks_add_btnHuy"
+            android:background="@drawable/btn_n"
+            android:layout_marginEnd="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hủy"/>
+        <Button
+            android:id="@+id/drinks_add_btnThem"
+            android:background="@drawable/btn_p"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thêm"/>
+    </LinearLayout>
+</LinearLayout>

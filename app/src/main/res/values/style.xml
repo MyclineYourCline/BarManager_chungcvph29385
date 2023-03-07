@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <style name="styleDialog">
+       <item name="android:radius">30dp</item>
+       <item name="android:textColor">#000</item>
+   </style>
+    <style name="Custom_change_edit">
+        <item name="android:radius">8dp</item>
+        <item name="borderWidth">0.3dp</item>
+    </style>
+    <style name="btnN">
+        <item name="android:radius">8dp</item>
+        <item name="backgroundColor">#CE9A9696</item>
+    </style> <style name="btnP">
+    <item name="android:radius">8dp</item>
+    <item name="backgroundColor">#39B63E</item>
+</style>
+
+</resources>

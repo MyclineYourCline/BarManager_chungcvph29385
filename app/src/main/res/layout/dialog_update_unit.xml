@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="10dp"
+    style="@style/styleDialog"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cập nhập đơn vị"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="20dp"/>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/edit_txt"
+        android:hint="Tên đơn vị..."
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/unit_update_name"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/unit_update_btnHuy"
+            android:background="@drawable/btn_n"
+            android:layout_marginEnd="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hủy"/>
+        <Button
+            android:id="@+id/unit_update_btnThem"
+            android:background="@drawable/btn_p"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cập nhập"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

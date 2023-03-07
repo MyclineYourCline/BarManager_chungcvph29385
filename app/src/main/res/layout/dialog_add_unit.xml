@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="10dp"
+    style="@style/styleDialog"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nhập tên đơn vị"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="20dp"/>
+    <EditText
+        android:id="@+id/unit_add_name"
+        android:layout_marginTop="20dp"
+        android:hint="Nhập tên đơn vị..."
+        android:background="@drawable/edit_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/unit_add_btnHuy"
+            android:background="@drawable/btn_n"
+            android:layout_marginEnd="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hủy"/>
+        <Button
+            android:id="@+id/unit_add_btnThem"
+            android:background="@drawable/btn_p"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thêm"/>
+        
+    </LinearLayout>
+
+
+
+</LinearLayout>

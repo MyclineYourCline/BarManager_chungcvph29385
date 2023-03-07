@@ -11,5 +11,6 @@ public class Cosume_management extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cosume_management);
         getSupportActionBar().setTitle("Tiêu thụ");
+        String name = "djt ma thang LInk";
     }
 }

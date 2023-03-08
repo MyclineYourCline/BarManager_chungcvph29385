@@ -1,6 +1,8 @@
 package com.example.barmanage.modle;
 
-public class importedItem {
+import java.io.Serializable;
+
+public class importedItem implements Serializable {
     private String drinkName, drinkPrice, unitCount, dateAdd;
 
     public importedItem(String drinkName, String drinkPrice, String unitCount, String dateAdd) {
@@ -8,6 +10,10 @@ public class importedItem {
         this.drinkPrice = drinkPrice;
         this.unitCount = unitCount;
         this.dateAdd = dateAdd;
+    }
+    public int sumRemaining(){
+        // todo...
+        return 1;
     }
     public int sumMonny(){
         int sum = Integer.parseInt(unitCount.trim())*Integer.parseInt(drinkPrice.trim());

@@ -88,7 +88,7 @@ public class Cosume_management extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              date.setText(getDate());
+              getDate(date);
             }
         });
         btn_Cancel.setOnClickListener(new View.OnClickListener() {
@@ -161,6 +161,12 @@ public class Cosume_management extends AppCompatActivity {
         ImageView imageView = dialog.findViewById(R.id.dialog_update_conSume_imgDate);
         Button btn_Cancel = dialog.findViewById(R.id.dialog_update_conSume_cancel);
         Button btn_add = dialog.findViewById(R.id.dialog_update_conSume_add);
+        // set gia tri
+        count.setText(item.getUnitCount());
+        date.setText(item.getDateAdd());
+        price.setText(item.getDrinkPrice());
+
+        //
 
         drinkNameAdapter adapter1 = new drinkNameAdapter(Cosume_management.this
                 ,R.layout.item_selected,setListDrinkName());
@@ -183,7 +189,7 @@ public class Cosume_management extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                date.setText(getDate());
+                getDate(date);
             }
         });
         // xu ly add
@@ -230,8 +236,7 @@ public class Cosume_management extends AppCompatActivity {
         dialog.show();
     }
 
-    private String getDate() {
-        final String[] result = {""};
+    private void getDate(EditText editText) {
         DatePickerDialog pickerDialog = new DatePickerDialog(Cosume_management.this);
         pickerDialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -241,15 +246,13 @@ public class Cosume_management extends AppCompatActivity {
                 try {
                     Date date = dateFormat.parse(dateChoice);
                     SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-mm-dd");
-                    result[0] = dateFormat1.format(date);
+                    editText.setText(dateFormat1.format(date));
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
         pickerDialog.show();
-        return result[0];
-
     }
 
     private List<drinks> setListDrinkName() {

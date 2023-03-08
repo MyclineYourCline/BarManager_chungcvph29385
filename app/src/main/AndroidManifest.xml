@@ -12,45 +12,49 @@
         android:theme="@style/Theme.BarManage"
         tools:targetApi="31">
         <activity
+            android:name=".DetailItem"
+            android:exported="false"
+            android:parentActivityName=".Management_home"/>
+        <activity
             android:name=".Selling_management"
-            android:parentActivityName=".Main_activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Main_activity" />
         <activity
             android:name=".Profit_management"
-            android:parentActivityName=".Main_activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Main_activity" />
         <activity
             android:name=".Expence_management"
-            android:parentActivityName=".Main_activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Main_activity" />
         <activity
             android:name=".Revennu_management"
-            android:parentActivityName=".Main_activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Main_activity" />
         <activity
             android:name=".Out_of_stock_management"
-            android:parentActivityName=".Main_activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Main_activity" />
         <activity
             android:name=".Management_home"
-            android:parentActivityName=".Main_activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Main_activity" />
         <activity
             android:name=".Cosume_management"
-            android:parentActivityName=".Main_activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Main_activity" />
         <activity
             android:name=".Impoted_management"
-            android:parentActivityName=".Main_activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Main_activity" />
         <activity
             android:name=".Drink_managerment"
-            android:parentActivityName=".Main_activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Main_activity" />
         <activity
             android:name=".Unit_management"
-            android:parentActivityName=".Main_activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Main_activity" />
         <activity
             android:name=".Screen"
             android:exported="false" />

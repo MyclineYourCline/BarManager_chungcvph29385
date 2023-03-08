@@ -40,6 +40,7 @@ public class Drink_managerment extends AppCompatActivity {
         getSupportActionBar().setTitle("Tên đồ uống");
         mRecyclerView = findViewById(R.id.drink_recycleView);
         mButton_add = findViewById(R.id.drink_add);
+        String name1 = " djt con me may may thang link ";
         adapter = new DrinkAdapter(Drink_managerment.this, new DrinkAdapter.clickListener() {
             @Override
             public void sendData(drinks item) {

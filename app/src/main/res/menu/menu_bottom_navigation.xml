@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_bt_importItem"
+        android:title="Đã nhập"
+        android:icon="@drawable/baseline_edit_note_24"/>
+    <item android:id="@+id/menu_bt_conSume"
+        android:title="Đã tiêu thụ"
+        android:icon="@drawable/sharp_filter"/>
+</menu>

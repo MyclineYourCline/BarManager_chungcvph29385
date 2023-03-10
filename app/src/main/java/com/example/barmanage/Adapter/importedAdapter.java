@@ -12,8 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.barmanage.Db_helper.DrinksHelper;
+import com.example.barmanage.Db_helper.UnitDao;
 import com.example.barmanage.R;
+import com.example.barmanage.modle.drinks;
 import com.example.barmanage.modle.importedItem;
+import com.example.barmanage.modle.unitProduct;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +29,15 @@ public class importedAdapter extends RecyclerView.Adapter<importedAdapter.itemIm
     private List<importedItem> mList;
     private List<importedItem> mListOld;
     private Listener mListener;
+    private DrinksHelper mDrinksHelper;
+    private UnitDao mUnitDao;
 
 
     public importedAdapter(Context mContext, Listener mListener) {
         this.mContext = mContext;
         this.mListener = mListener;
+        mDrinksHelper = new DrinksHelper(mContext);
+        mUnitDao = new UnitDao(mContext);
     }
     public void setmList(List<importedItem> list){
         this.mList = list;
@@ -52,9 +60,9 @@ public class importedAdapter extends RecyclerView.Adapter<importedAdapter.itemIm
         if (item == null){
             return;
         }
-        holder.drinkName.setText(item.getDrinkName());
+        holder.drinkName.setText(getDrinkName(String.valueOf(item.getDrinkID())));
         holder.drinkPrice.setText(item.getDrinkPrice()+" VND");
-        holder.unitName.setText(item.getUnitCount()+" loc");
+        holder.unitName.setText(item.getUnitCount()+ " "+getUnitName(String.valueOf(item.getDrinkID())));
         holder.totalUnit.setText(item.sumMonny()+" VND");
         holder.dateAdd.setText(item.getDateAdd());
         holder.update.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +71,17 @@ public class importedAdapter extends RecyclerView.Adapter<importedAdapter.itemIm
                 mListener.sendData(item);
             }
         });
+    }
+
+    private String getUnitName(String drinkID) {
+        drinks mDrinks = mDrinksHelper.getByID(drinkID);
+        unitProduct unitItem = mUnitDao.getByID(String.valueOf(mDrinks.getUnitID()));
+        return unitItem.getUnitName();
+    }
+
+    private String getDrinkName(String drinkID) {
+        drinks itemDrinks = mDrinksHelper.getByID(drinkID);
+        return itemDrinks.getDinkName();
     }
 
     @Override

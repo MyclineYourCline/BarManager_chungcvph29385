@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import com.example.barmanage.Adapter.drinkManagerAdapter;
+import com.example.barmanage.Db_helper.DrinksHelper;
+import com.example.barmanage.Db_helper.ReceiptsHelper;
 import com.example.barmanage.modle.importedItem;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.List;
 
 public class Management_home extends AppCompatActivity {
     RecyclerView mRecyclerView;
+    private ReceiptsHelper mReceiptsHelper;
     drinkManagerAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,7 @@ public class Management_home extends AppCompatActivity {
         setContentView(R.layout.activity_management_home);
         getSupportActionBar().setTitle("Quản lý");
         mRecyclerView = findViewById(R.id.manager_recycleView);
+        mReceiptsHelper = new ReceiptsHelper(Management_home.this);
         LinearLayoutManager manager = new LinearLayoutManager(Management_home.this);
         mRecyclerView.setLayoutManager(manager);
         adapter = new drinkManagerAdapter(Management_home.this, new drinkManagerAdapter.senData() {
@@ -43,12 +47,7 @@ public class Management_home extends AppCompatActivity {
     }
 
     private List<importedItem> getList() {
-        List<importedItem> list = new ArrayList<>();
-        list.add(new importedItem("bo hoc","12000", "3", "21/11/2002"));
-        list.add(new importedItem("bo hoc","300", "5", "23/01/2030"));
-        list.add(new importedItem("bo askda","200", "1", "21/03/2015"));
-        list.add(new importedItem("bo hoc","12000", "1", "21/11/2002"));
-        list.add(new importedItem("bo hoc","300", "2", "23/01/2030"));
+        List<importedItem> list = mReceiptsHelper.getAll();
         return list;
     }
 

@@ -5,8 +5,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import com.example.barmanage.Db_helper.myDB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +18,18 @@ public class Main_activity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private userFaceAdapter adapter;
     private Intent intent;
+    private myDB mMyDB;
+    private SQLiteDatabase database;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.main_recycleView);
+        mMyDB = new myDB(Main_activity.this);
+        database = mMyDB.getWritableDatabase();
+        database.close();
+
         adapter = new userFaceAdapter(this, new userFaceAdapter.ClickItem() {
             @Override
             public void senData(main_userFace items) {

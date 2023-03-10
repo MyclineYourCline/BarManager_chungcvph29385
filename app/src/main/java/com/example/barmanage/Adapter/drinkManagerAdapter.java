@@ -11,7 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.barmanage.Db_helper.DrinksHelper;
+import com.example.barmanage.Db_helper.UnitDao;
 import com.example.barmanage.R;
+import com.example.barmanage.modle.drinks;
 import com.example.barmanage.modle.importedItem;
 
 import java.util.ArrayList;
@@ -23,10 +26,14 @@ public class drinkManagerAdapter extends RecyclerView.Adapter<drinkManagerAdapte
     private List<importedItem> mList;
     private List<importedItem> mListOld;
     private senData listener;
+    private DrinksHelper mDrinksHelper;
+    private UnitDao mUnitDao;
 
     public drinkManagerAdapter(Context mContext, senData listener) {
         this.mContext = mContext;
         this.listener = listener;
+        mDrinksHelper = new DrinksHelper(mContext);
+        mUnitDao = new UnitDao(mContext);
     }
     public void setmList(List<importedItem> mList){
         this.mList = mList;
@@ -53,8 +60,8 @@ public class drinkManagerAdapter extends RecyclerView.Adapter<drinkManagerAdapte
         if (item ==  null){
             return;
         }
-        holder.mDrinkName.setText(item.getDrinkName());
-        holder.mRemaining.setText("Hiện tại còn: "+item.sumRemaining());
+        holder.mDrinkName.setText(getDrinkName(String.valueOf(item.getDrinkID())));
+        holder.mRemaining.setText("Hiện tại còn: "+getRemanining());
         holder.mDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,6 +69,15 @@ public class drinkManagerAdapter extends RecyclerView.Adapter<drinkManagerAdapte
             }
         });
 
+    }
+
+    private String getRemanining() {
+        return String.valueOf(1);
+    }
+
+    private String getDrinkName(String DrinkID) {
+        drinks result = mDrinksHelper.getByID(DrinkID);
+        return result.getDinkName();
     }
 
     @Override
@@ -93,7 +109,7 @@ public class drinkManagerAdapter extends RecyclerView.Adapter<drinkManagerAdapte
                 else{
                     List<importedItem> list = new ArrayList<>();
                     for (importedItem item : mListOld){
-                        if (item.getDrinkName().toLowerCase().contains(search.toLowerCase())){
+                        if (getDrinkName(String.valueOf(item.getDrinkID())).toLowerCase().contains(search.toLowerCase())){
                             list.add(item);
                         }
                     }

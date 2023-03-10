@@ -32,7 +32,7 @@ public class DetailItem extends AppCompatActivity {
         setContentView(R.layout.activity_detail_item);
         mIntent = getIntent();
         importedItem ItemReceive = (importedItem) mIntent.getSerializableExtra("item");
-        getSupportActionBar().setTitle("Chi tiết về: "+ItemReceive.getDrinkName());
+//        getSupportActionBar().setTitle("Chi tiết về: "+ItemReceive.getDrinkName());
         mViewPager = findViewById(R.id.detail_ViewPager);
         mBTN = findViewById(R.id.detail_btnN);
         adapter = new tabLayoutAdapter(getSupportFragmentManager()

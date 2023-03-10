@@ -1,7 +1,5 @@
 package com.example.barmanage;
 
-import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,15 +17,19 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.barmanage.Adapter.drinkNameAdapter;
 import com.example.barmanage.Adapter.importedAdapter;
+import com.example.barmanage.Db_helper.DrinksHelper;
+import com.example.barmanage.Db_helper.ReceiptsHelper;
+import com.example.barmanage.Db_helper.SalesslipHelper;
+import com.example.barmanage.Db_helper.UnitDao;
 import com.example.barmanage.modle.drinks;
 import com.example.barmanage.modle.importedItem;
+import com.example.barmanage.modle.unitProduct;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.ParseException;
@@ -40,6 +42,9 @@ public class Cosume_management extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private FloatingActionButton btn_add;
     private importedAdapter adapter;
+    private UnitDao mUnitDao;
+    private ReceiptsHelper mReceiptsHelper;
+    private DrinksHelper mDrinksHelper;
 
 
     @SuppressLint("MissingInflatedId")
@@ -51,6 +56,11 @@ public class Cosume_management extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.consume_recycleView);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);
+        //
+        mUnitDao = new UnitDao(Cosume_management.this);
+        mReceiptsHelper = new ReceiptsHelper(Cosume_management.this);
+        mDrinksHelper = new DrinksHelper(Cosume_management.this);
+        //
         btn_add = findViewById(R.id.consum_add);
         adapter = new importedAdapter(Cosume_management.this, new importedAdapter.Listener() {
             @Override
@@ -134,7 +144,7 @@ public class Cosume_management extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 drinks items = (drinks) mSpinner.getSelectedItem();
-                unitName.setText(items.getUnitName());
+                unitName.setText(getUnitName(String.valueOf(items.getUnitID())));
             }
 
             @Override
@@ -148,6 +158,12 @@ public class Cosume_management extends AppCompatActivity {
         dialog.show();
 
     }
+
+    private String getUnitName(String unitID) {
+       unitProduct  unitItem = mUnitDao.getByID(unitID);
+       return unitItem.getUnitName();
+    }
+
     // chungcv: update items cho unit
     private void updatItems(importedItem item) {
         Dialog dialog = new Dialog(Cosume_management.this,
@@ -176,7 +192,7 @@ public class Cosume_management extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 drinks items = (drinks) mSpinner.getSelectedItem();
-                unitName.setText(items.getUnitName());
+                unitName.setText(getUnitName(String.valueOf(items.getUnitID())));
             }
 
             @Override
@@ -256,23 +272,14 @@ public class Cosume_management extends AppCompatActivity {
     }
 
     private List<drinks> setListDrinkName() {
-        List<drinks> list = new ArrayList<>();
-        list.add(new drinks("Chọn tên đồ uống","đơn vị"));
-        list.add(new drinks("cocacola","lon"));
-        list.add(new drinks("number one","chai"));
-        list.add(new drinks("dau tay","chai"));
-        list.add(new drinks("sting","thung"));
+        List<drinks> list =mDrinksHelper.getAll();
         return list;
     }
     // chungcv setListData cho thang consume
 
     private List<importedItem> getList() {
-        List<importedItem> list = new ArrayList<>();
-        list.add(new importedItem("bo hoc","12000", "3", "21/11/2002"));
-        list.add(new importedItem("bo hoc","300", "5", "23/01/2030"));
-        list.add(new importedItem("bo askda","200", "1", "21/03/2015"));
-        list.add(new importedItem("bo hoc","12000", "1", "21/11/2002"));
-        list.add(new importedItem("bo hoc","300", "2", "23/01/2030"));
+        SalesslipHelper mSalesslipHelper = new SalesslipHelper(Cosume_management.this);
+        List<importedItem> list = mSalesslipHelper.getAll();
         return list;
     }
 

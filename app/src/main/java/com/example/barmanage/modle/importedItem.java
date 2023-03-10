@@ -3,29 +3,21 @@ package com.example.barmanage.modle;
 import java.io.Serializable;
 
 public class importedItem implements Serializable {
-    private String drinkName, drinkPrice, unitCount, dateAdd;
+    private String  drinkPrice, dateAdd,unitCount,receiptsID;
+    private int  drinkID;
 
-    public importedItem(String drinkName, String drinkPrice, String unitCount, String dateAdd) {
-        this.drinkName = drinkName;
+    public importedItem(String drinkPrice, String dateAdd, String unitCount, String receiptsID, int drinkID) {
         this.drinkPrice = drinkPrice;
-        this.unitCount = unitCount;
         this.dateAdd = dateAdd;
-    }
-    public int sumRemaining(){
-        // todo...
-        return 1;
-    }
-    public int sumMonny(){
-        int sum = Integer.parseInt(unitCount.trim())*Integer.parseInt(drinkPrice.trim());
-        return sum;
+        this.unitCount = unitCount;
+        this.receiptsID = receiptsID;
+        this.drinkID = drinkID;
     }
 
-    public String getDrinkName() {
-        return drinkName;
+    public importedItem() {
     }
-
-    public void setDrinkName(String drinkName) {
-        this.drinkName = drinkName;
+    public double sumMonny(){
+        return Double.parseDouble(drinkPrice.trim())* Double.parseDouble(unitCount.trim());
     }
 
     public String getDrinkPrice() {
@@ -36,6 +28,14 @@ public class importedItem implements Serializable {
         this.drinkPrice = drinkPrice;
     }
 
+    public String getDateAdd() {
+        return dateAdd;
+    }
+
+    public void setDateAdd(String dateAdd) {
+        this.dateAdd = dateAdd;
+    }
+
     public String getUnitCount() {
         return unitCount;
     }
@@ -44,11 +44,19 @@ public class importedItem implements Serializable {
         this.unitCount = unitCount;
     }
 
-    public String getDateAdd() {
-        return dateAdd;
+    public String getReceiptsID() {
+        return receiptsID;
     }
 
-    public void setDateAdd(String dateAdd) {
-        this.dateAdd = dateAdd;
+    public void setReceiptsID(String receiptsID) {
+        this.receiptsID = receiptsID;
+    }
+
+    public int getDrinkID() {
+        return drinkID;
+    }
+
+    public void setDrinkID(int drinkID) {
+        this.drinkID = drinkID;
     }
 }

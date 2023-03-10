@@ -1,11 +1,12 @@
 package com.example.barmanage.modle;
 
 public class drinks {
-    private String dinkName, unitName;
+    private String dinkName;
+    private String drinkID;
+    private int unitID;
 
-    public drinks(String dinkName, String unitName) {
-        this.dinkName = dinkName;
-        this.unitName = unitName;
+
+    public drinks() {
     }
 
     public String getDinkName() {
@@ -16,11 +17,25 @@ public class drinks {
         this.dinkName = dinkName;
     }
 
-    public String getUnitName() {
-        return unitName;
+    public String getDrinkID() {
+        return drinkID;
     }
 
-    public void setUnitName(String unitName) {
-        this.unitName = unitName;
+    public void setDrinkID(String drinkID) {
+        this.drinkID = drinkID;
+    }
+
+    public int getUnitID() {
+        return unitID;
+    }
+
+    public void setUnitID(int unitID) {
+        this.unitID = unitID;
+    }
+
+    public drinks(String dinkName, String drinkID, int unitID) {
+        this.dinkName = dinkName;
+        this.drinkID = drinkID;
+        this.unitID = unitID;
     }
 }

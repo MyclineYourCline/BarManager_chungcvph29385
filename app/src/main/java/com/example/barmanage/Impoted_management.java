@@ -26,8 +26,12 @@ import android.widget.Toast;
 
 import com.example.barmanage.Adapter.drinkNameAdapter;
 import com.example.barmanage.Adapter.importedAdapter;
+import com.example.barmanage.Db_helper.DrinksHelper;
+import com.example.barmanage.Db_helper.ReceiptsHelper;
+import com.example.barmanage.Db_helper.UnitDao;
 import com.example.barmanage.modle.drinks;
 import com.example.barmanage.modle.importedItem;
+import com.example.barmanage.modle.unitProduct;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.w3c.dom.Text;
@@ -43,6 +47,10 @@ public class Impoted_management extends AppCompatActivity {
     private importedAdapter adapter;
     private TextView mTotalPrice;
     private FloatingActionButton mButton_add;
+    private DrinksHelper mDrinksHelper;
+    private ReceiptsHelper mReceiptsHelper;
+    private UnitDao mUnitDao;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +61,10 @@ public class Impoted_management extends AppCompatActivity {
         mTotalPrice = findViewById(R.id.imported_totalPrice);
         mButton_add = findViewById(R.id.imported_add);
          mTotalPrice = findViewById(R.id.imported_totalPrice);
+         //
+        mDrinksHelper = new DrinksHelper(Impoted_management.this);
+        mReceiptsHelper = new ReceiptsHelper(Impoted_management.this);
+        mUnitDao = new UnitDao(Impoted_management.this);
         //
         adapter = new importedAdapter(Impoted_management.this, new importedAdapter.Listener() {
             @Override
@@ -150,6 +162,15 @@ public class Impoted_management extends AppCompatActivity {
                     }
                 }
                 else{
+                    drinks drinksSP = (drinks) mSpinner.getSelectedItem();
+                    importedItem itemAdd = new importedItem();
+                    itemAdd.setUnitCount(count.getText().toString().trim());
+                    itemAdd.setDateAdd(date.getText().toString().trim());
+                    itemAdd.setDrinkID(Integer.parseInt(drinksSP.getDrinkID()));
+                    itemAdd.setDrinkPrice(price.getText().toString().trim());
+                    mReceiptsHelper.inserImported(itemAdd);
+                    loadRecycleView(getListInDB());
+                    totalPrice();
                     Toast.makeText(Impoted_management.this, "Bạn đã thêm thành công"
                             , Toast.LENGTH_SHORT).show();
                 }
@@ -159,11 +180,12 @@ public class Impoted_management extends AppCompatActivity {
         drinkNameAdapter adapter1 = new drinkNameAdapter
                 (Impoted_management.this,R.layout.item_selected,setListDrinkName());
         mSpinner.setAdapter(adapter1);
+        mSpinner.setSelection(0);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 drinks items = (drinks) mSpinner.getSelectedItem();
-                unitName.setText(items.getUnitName());
+                unitName.setText(getUnitNameByID(String.valueOf(items.getUnitID()),position));
             }
 
             @Override
@@ -192,13 +214,16 @@ public class Impoted_management extends AppCompatActivity {
         Button btn_Cancel = dialog.findViewById(R.id.dialog_update_imported_cancel);
         Button btn_add = dialog.findViewById(R.id.dialog_update_imported_add);
         drinkNameAdapter adapter1 = new drinkNameAdapter
-                (Impoted_management.this,R.layout.item_selected,setListDrinkName(item.getDrinkName()));
+                (Impoted_management.this,R.layout.item_selected,getListDrinkName(String.valueOf(item.getDrinkID())));
         mSpinner.setAdapter(adapter1);
+        //
+        d("ca" + "chung", "updateImported: "+mSpinner.getCount());
         mSpinner.setSelection(1);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                   drinks choice = (drinks) mSpinner.getSelectedItem();
+                   unitName.setText(getUnitNameByID(String.valueOf(choice.getUnitID()),position));
             }
 
             @Override
@@ -215,8 +240,36 @@ public class Impoted_management extends AppCompatActivity {
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo
-                dialog.cancel();
+                if (mSpinner.getSelectedItemPosition() == 0 || count.getText().toString().isEmpty()
+                        || price.getText().toString().isEmpty() || date.getText().toString().isEmpty()) {
+                    if (mSpinner.getSelectedItemPosition() == 0) {
+                        Toast.makeText(Impoted_management.this, "Bạn chưa chọn tên sản phẩm"
+                                , Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (count.getText().toString().isEmpty()) {
+                        count.setError("Bạn chưa nhập số lượng");
+                        return;
+                    } else if (price.getText().toString().isEmpty()) {
+                        price.setError("Bạn chưa nhập giá");
+                        return;
+                    } else {
+                        date.setError("Bạn chưa chọn ngày tháng");
+                        return;
+                    }
+                } else {
+                    //
+                    drinks itemGetBySpinner = (drinks) mSpinner.getSelectedItem();
+                    importedItem itemUpdate = new importedItem();
+                    itemUpdate.setReceiptsID(item.getReceiptsID());
+                    itemUpdate.setDrinkPrice(price.getText().toString().trim());
+                    itemUpdate.setDrinkID(Integer.parseInt(getDrinkID(itemGetBySpinner.getDinkName())));
+                    itemUpdate.setUnitCount(count.getText().toString().trim());
+                    itemUpdate.setDateAdd(date.getText().toString().trim());
+                    mReceiptsHelper.updateImported(itemUpdate);
+                    loadRecycleView(getListInDB());
+                    dialog.cancel();
+                    Toast.makeText(Impoted_management.this, "Update thành công", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -243,40 +296,64 @@ public class Impoted_management extends AppCompatActivity {
         });
         count.setText(item.getUnitCount());
         date.setText(item.getDateAdd());
-        unitName.setText("lon");
         price.setText(item.getDrinkPrice());
         dialog.show();
 
     }
 
-    private List<drinks> setListDrinkName() {
-        List<drinks> list = new ArrayList<>();
-        list.add(new drinks("Chọn tên đồ uống","đơn vị"));
-        list.add(new drinks("cocacola","lon"));
-        list.add(new drinks("number one","chai"));
-        list.add(new drinks("dau tay","chai"));
-        list.add(new drinks("sting","thung"));
-        return list;
+    private String getDrinkID(String DrinkNam) {
+        drinks itemResult = mDrinksHelper.getByName(DrinkNam);
+        return itemResult.getDrinkID();
     }
-    private List<drinks> setListDrinkName(String item) {
-        List<drinks> list = new ArrayList<>();
-        list.add(new drinks("Chọn tên đồ uống","đơn vị"));
-        list.add(new drinks(item,"lon"));
-        list.add(new drinks("cocacola","lon"));
-        list.add(new drinks("number one","chai"));
-        list.add(new drinks("dau tay","chai"));
-        list.add(new drinks("sting","thung"));
-        return list;
+
+    private List<drinks> setListDrinkName() {
+        List<drinks> listResult = new ArrayList<>();
+        listResult.add(new drinks("Chọn tên đồ uống","Đơn vị",-1));
+        List<drinks> list = mDrinksHelper.getAll();
+        for (drinks x: list){
+            if (list.size() == 0){
+                return listResult;
+            }
+            else{
+                listResult.add(x);
+            }
+
+        }
+        return listResult;
+    }
+    private List<drinks> getListDrinkName(String drinkID) {
+        List<drinks> listResult = new ArrayList<>();
+        listResult.add(new drinks("Chọn đồ uống","Đơn vị",-1));
+        drinks itemDrinkRiciver = mDrinksHelper.getByID(drinkID);
+        if (itemDrinkRiciver == null){
+           return listResult;
+        }
+        listResult.add(itemDrinkRiciver);
+        List<drinks> list = mDrinksHelper.getAll();
+        for (drinks x: list){
+            listResult.add(x);
+        }
+        return listResult;
     }
 
     private List<importedItem> getmList() {
-        List<importedItem> list = new ArrayList<>();
-        list.add(new importedItem("bo hoc","12000", "3", "21/11/2002"));
-        list.add(new importedItem("bo hoc","300", "5", "23/01/2030"));
-        list.add(new importedItem("bo askda","200", "1", "21/03/2015"));
-        list.add(new importedItem("bo hoc","12000", "1", "21/11/2002"));
-        list.add(new importedItem("bo hoc","300", "2", "23/01/2030"));
+        List<importedItem> list = mReceiptsHelper.getAll();
         return list;
+    }
+    private String getUnitNameByID(String drinkID,int position){
+        if (position==0){
+            return "Đơn vị";
+        }
+        unitProduct itemUnit = mUnitDao.getByID(drinkID);
+        return itemUnit.getUnitName();
+    }
+    private void loadRecycleView(List<importedItem> list){
+        adapter.setmList(list);
+        mRecyclerView.setAdapter(adapter);
+    }
+    private List<importedItem> getListInDB(){
+        List<importedItem> listResult = mReceiptsHelper.getAll();
+        return listResult;
     }
 
     @Override
@@ -304,14 +381,14 @@ public class Impoted_management extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
     private void totalPrice (){
-        int totalPrice = 0;
+        double totalPrice = 0;
         List<importedItem> list = adapter.getmList();
         if (list == null){
             mTotalPrice.setText("Tổng tiền: "+totalPrice+" VND");
             return;
         }
         for (importedItem x: list){
-            totalPrice += x.sumMonny();
+           totalPrice+=x.sumMonny();
         }
         mTotalPrice.setText("Tổng tiền: "+totalPrice+" VND");
     }

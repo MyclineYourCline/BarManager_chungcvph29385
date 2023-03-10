@@ -1,5 +1,7 @@
 package com.example.barmanage.Adapter;
 
+import static android.util.Log.d;
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -13,8 +15,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.barmanage.Db_helper.UnitDao;
 import com.example.barmanage.R;
 import com.example.barmanage.modle.drinks;
+import com.example.barmanage.modle.unitProduct;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +28,14 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.drinkViewHol
     private List<drinks> mList;
     private List<drinks> mListOld;
     private clickListener listener;
+    private unitProduct itemProduct;
+    private UnitDao unitDao;
 
     public DrinkAdapter(Context mContext, clickListener listener) {
         this.mContext = mContext;
         this.listener = listener;
+        unitDao = new UnitDao(mContext);
+
     }
     public void setmList(List<drinks> list){
         this.mList = list;
@@ -54,14 +62,22 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.drinkViewHol
                 return;
             }
             holder.drinkName.setTypeface(Typeface.DEFAULT_BOLD);
+            //
             holder.drinkName.setText(item.getDinkName());
-            holder.mUnitName.setText("Đơn vị: "+item.getUnitName());
+            holder.mUnitName.setText("Đơn vị: "+getUnitNameByDrinkID(item));
             holder.mUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.sendData(item);
+                    d("ca" + "chung", "onClick: "+getUnitNameByDrinkID(item));
                 }
             });
+    }
+
+    private String getUnitNameByDrinkID(drinks item) {
+        unitProduct unitProduct;
+        unitProduct = unitDao.getByID(String.valueOf(item.getUnitID()));
+        return unitProduct.getUnitName();
     }
 
     @Override

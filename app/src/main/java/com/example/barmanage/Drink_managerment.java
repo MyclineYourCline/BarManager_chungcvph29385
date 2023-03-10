@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.example.barmanage.Adapter.DrinkAdapter;
 import com.example.barmanage.Adapter.unitProductNameAdpater;
+import com.example.barmanage.Db_helper.DrinksHelper;
+import com.example.barmanage.Db_helper.UnitDao;
 import com.example.barmanage.modle.drinks;
 import com.example.barmanage.modle.unitProduct;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,6 +34,8 @@ public class Drink_managerment extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private DrinkAdapter adapter;
     private FloatingActionButton mButton_add;
+    private UnitDao mUnitDao;
+    private DrinksHelper drinksHelperDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +44,18 @@ public class Drink_managerment extends AppCompatActivity {
         getSupportActionBar().setTitle("Tên đồ uống");
         mRecyclerView = findViewById(R.id.drink_recycleView);
         mButton_add = findViewById(R.id.drink_add);
-        String name1 = " djt con me may may thang link ";
+        //
+        mUnitDao = new UnitDao(Drink_managerment.this);
+        drinksHelperDao = new DrinksHelper(Drink_managerment.this);
+        //
         adapter = new DrinkAdapter(Drink_managerment.this, new DrinkAdapter.clickListener() {
             @Override
             public void sendData(drinks item) {
                 upDateDrinks(item);
+
             }
         });
-        getRecylerView(setList());
+        getAdapter(getListDrinks());
         mButton_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +74,7 @@ public class Drink_managerment extends AppCompatActivity {
                     public void onClick(View v) {
                         if (mDrinkName.getText().toString().isEmpty()
                             ){
-                            mDrinkName.setError("Không được để trốn tên");
+                            mDrinkName.setError("Không được để trống tên");
                             return;
                         }
                         if (mSpinner.getSelectedItemPosition() == 0){
@@ -77,6 +85,13 @@ public class Drink_managerment extends AppCompatActivity {
 
                         dialog.cancel();
                         unitProduct item = (unitProduct) mSpinner.getSelectedItem();
+                        drinks itemDrink = new drinks();
+                        itemDrink.setUnitID(Integer.parseInt(item.getUnitID()));
+                        itemDrink.setDinkName(mDrinkName.getText().toString().trim());
+                        drinksHelperDao.insertDrinks(itemDrink);
+                        //
+                        getAdapter(getListDrinks());
+                        //
                         Toast.makeText(Drink_managerment.this, "Thêm thành công",
                                 Toast.LENGTH_SHORT).show();
 
@@ -103,10 +118,6 @@ public class Drink_managerment extends AppCompatActivity {
                 }
             }
         });
-    }
-    public void getRecylerView(List<drinks> list){
-        adapter.setmList(list);
-        mRecyclerView.setAdapter(adapter);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -138,12 +149,14 @@ public class Drink_managerment extends AppCompatActivity {
         Spinner mSpinner = dialog.findViewById(R.id.dialog_update_spinerDinks);
         Button mBtn_update = dialog.findViewById(R.id.drinks_update_btnThem);
         Button mBtn_cancel = dialog.findViewById(R.id.drinks_update_btnHuy);
+        //
+
+        //
         mDrinkName.setText(item.getDinkName());
-        unitProductNameAdpater adpater = new unitProductNameAdpater(Drink_managerment.this,
-                R.layout.item_selected,getListNameUnit(item.getUnitName()));
-        mSpinner.setAdapter(adpater);
-        mSpinner.setSelection(1);
-        String valueToSelect = item.getUnitName();
+        unitProductNameAdpater adapter = new unitProductNameAdpater(Drink_managerment.this,
+                R.layout.item_selected,getListNameUnit(String.valueOf(item.getUnitID())));
+        mSpinner.setAdapter(adapter);
+        mSpinner.setSelection(0);
         mBtn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,62 +166,62 @@ public class Drink_managerment extends AppCompatActivity {
         mBtn_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (mDrinkName.getText().toString().isEmpty()){
                     mDrinkName.setError("Không được để trống phần tên");
                     return;
                 }
-                if (mSpinner.getSelectedItemPosition() == 0){
+                if (mSpinner.getSelectedItemPosition() == 1){
                     Toast.makeText(Drink_managerment.this, "Bạn chưa chọn đơn vị tính",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                dialog.cancel();
+                //
+               unitProduct unitItem = (unitProduct) mSpinner.getSelectedItem();
+                drinks items = new drinks();
+                items.setDrinkID(item.getDrinkID());
+                items.setDinkName(mDrinkName.getText().toString().trim());//
+                items.setUnitID(Integer.parseInt(unitItem.getUnitID()));
+
+                drinksHelperDao.updateDrinks(items);
+                getAdapter(getListDrinks());
                 Toast.makeText(Drink_managerment.this, "Cập nhập thành công",
                         Toast.LENGTH_SHORT).show();
+                dialog.cancel();
             }
         });
         dialog.show();
     }
+    private void getAdapter(List<drinks> list){
+        adapter.setmList(list);
+        adapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(adapter);
+    }
 
-    private List getListNameUnit(String unitName) {
+    private List getListNameUnit(String unitID) {
         List<unitProduct> list = new ArrayList<>();
-        list.add(new unitProduct("Đơn vị tính"));
-        list.add(new unitProduct(unitName));
-        list.add(new unitProduct("lo"));
-        list.add(new unitProduct("lon"));
-        list.add(new unitProduct("djtme"));
+        unitProduct UnitByID = mUnitDao.getByID(unitID);
+        list.clear();
+        List<unitProduct> listGetAll = getListNameUnit();
+        list.add(UnitByID);
+        for(unitProduct x: listGetAll){
+            list.add(x);
+        }
         return list;
     }
-    public List<drinks> setList(){
-        List<drinks> list = new ArrayList<>();
-        list.add(new drinks("cocacola","lon"));
-        list.add(new drinks("number one","chai"));
-        list.add(new drinks("dau tay","chai"));
-        list.add(new drinks("sting","thung"));
-        list.add(new drinks("bear","kien"));
-        list.add(new drinks("tiger","lit"));
-        list.add(new drinks("bo huc","lit"));
-        list.add(new drinks("nuoc dai","binh"));
-        list.add(new drinks("nuoc oi","can"));
-        list.add(new drinks("vcl","can"));
-        list.add(new drinks("nhu quan que","xach"));
-        list.add(new drinks("nuoc nguoi yeu cu","khoi"));
+    public List<drinks> getListDrinks(){
+        List<drinks> list = drinksHelperDao.getAll();
         return list;
     }
     private List getListNameUnit() {
-        List<unitProduct> mlist = new ArrayList<>();
-        mlist.add(new unitProduct("Đơn vị tính"));
-        mlist.add(new unitProduct("chai"));
-        mlist.add(new unitProduct("lo"));
-        mlist.add(new unitProduct("lon"));
-        mlist.add(new unitProduct("djtme"));
-        mlist.add(new unitProduct("buoi"));
-        mlist.add(new unitProduct("Đơn vị tính"));
-        mlist.add(new unitProduct("chai"));
-        mlist.add(new unitProduct("lo"));
-        mlist.add(new unitProduct("lon"));
-        mlist.add(new unitProduct("djtme"));
-        mlist.add(new unitProduct("buoi"));
-        return mlist;
+        List<unitProduct> mlist = mUnitDao.getAll();
+        List<unitProduct> mlist1 = new ArrayList<>();
+
+        mlist1.clear();
+        mlist1.add(new unitProduct("Chọn Đơn vị tính","-1"));
+        for (unitProduct x: mlist){
+            mlist1.add(x);
+        }
+        return mlist1;
     }
 }
